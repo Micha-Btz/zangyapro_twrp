@@ -23,21 +23,26 @@ For building TWRP for BQ AQuaris X2 Pro
 
 Works:
 
-- nothiing :-(
+- boot to recovery
+- mount scdard
+
+not working:
+
+boot to LOS
+encrypt data partition
 
 Finally execute these:
 
 ```
-export ALLOW_MISSING_DEPENDENCIES=true
-. build/envsetup.sh
-lunch omni_zangyapro-eng 
-mka recoveryimage
+repo init --depth=1 -u git://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-8.1
+clone this repo to local manifest
+make clean && export LC_ALL=C && export ALLOW_MISSING_DEPENDENCIES=true && source build/envsetup.sh && lunch omni_zangyapro-eng && make adbd && mka recoveryimage
 ```
 
 To test it:
 
 ```
-fastboot boot out/target/product/platina/recovery.img
+fastboot boot out/target/product/zangyapro/recovery.img
 ```
 
 
