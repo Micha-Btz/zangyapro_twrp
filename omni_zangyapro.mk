@@ -47,9 +47,11 @@ PRODUCT_PACKAGES_DEBUG += \
 
 # Time Zone data for recovery
 PRODUCT_COPY_FILES += \
-    system/timezone/output_data/iana/tzdata:recovery/root/system/usr/share/zoneinfo/tzdata
+    system/timezone/output_data/iana/tzdata:recovery/root/system/usr/share/zoneinfo/tzdata \
+	$(LOCAL_PATH)/recovery/init.recovery.qcom.rc:root/init.recovery.qcom.rc \
+	$(LOCAL_PATH)/recovery/init.recovery.zangya.usb.rc:root/init.recovery.zangya.usb.rc \
 
-# Device identifier. This must come after all inclusions
+	# Device identifier. This must come after all inclusions
 PRODUCT_NAME := omni_zangyapro
 PRODUCT_DEVICE := zangyapro
 PRODUCT_BRAND := BQ
