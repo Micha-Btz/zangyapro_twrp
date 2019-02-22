@@ -95,3 +95,4 @@ TW_INCLUDE_NTFS_3G := true
 TW_SCREEN_BLANK_ON_BOOT := true
 TW_THEME := portrait_hdpi
 TWRP_INCLUDE_LOGCAT := true
+TARGET_USES_LOGD := true
