@@ -34,15 +34,23 @@ encrypt data partition
 Finally execute these:
 
 ```
-repo init --depth=1 -u git://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-8.1
-clone this repo to local manifest
-make clean && export LC_ALL=C && export ALLOW_MISSING_DEPENDENCIES=true && source build/envsetup.sh && lunch omni_zangyapro-eng && make adbd && mka recoveryimage
+repo init --depth=1 -u git://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-9.0
+add this repo to your manifest like
+cat .repo/local_manifests/roomservice.xml
+<manifest>
+  <project name="Micha-Btz/zangyapro_twrp" path="device/bq/zangyapro" remote="github" revision="android-9.0" />
+  <project name="Micha-Btz/newkernel" path="kernel/bq/sdm660" remote="github" revision="new-kernel" />
+</manifest>
+```
+now build
+```
+make clean && export LC_ALL=C && export ALLOW_MISSING_DEPENDENCIES=true && source build/envsetup.sh && lunch omni_zangyapro-eng && mka bootimage
 ```
 
 To test it:
 
 ```
-fastboot boot out/target/product/zangyapro/recovery.img
+fastboot flash boot_a out/target/product/zangyapro/recovery.img
 ```
 
 
