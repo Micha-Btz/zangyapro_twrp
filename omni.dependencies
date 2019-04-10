@@ -1,8 +1,14 @@
 [
  {
     "remote":"github",
+    "repository": "LineageOS/android_vendor_qcom_opensource_cryptfs_hw",
+    "target_path": "device/qcom/common",
+    "revision":"lineage-16.0"
+ },
+ {
+    "remote":"github",
     "repository": "Micha-Btz/newkernel",
     "target_path": "kernel/bq/sdm660",
     "revision":"new-kernel"
-  }
+ }
 ]
