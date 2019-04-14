@@ -38,11 +38,11 @@ PRODUCT_STATIC_BOOT_CONTROL_HAL := \
     libz
 
 # Update engine
-#PRODUCT_PACKAGES += \
-#    brillo_update_payload \
-#    update_engine \
+PRODUCT_PACKAGES += \
+    brillo_update_payload \
+    update_engine \
 #    update_engine_sideload \
-#    update_verifier
+    update_verifier
 
 #PRODUCT_PACKAGES_DEBUG += \
 #    update_engine_client
