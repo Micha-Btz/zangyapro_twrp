@@ -1,12 +1,32 @@
-# Inherit from the common Open Source product configuration
-$(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base_telephony.mk)
+#
+# Copyright 2012 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
-# Inherit some common Omni stuff.
+# Get the prebuilt list of APNs
+$(call inherit-product, vendor/omni/config/gsm.mk)
+
+# Inherit from the common Open Source product configuration
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+
+# Inherit language packages
+$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
+
+# Inherit from our custom product configuration
 $(call inherit-product, vendor/omni/config/common.mk)
 
-$(call inherit-product, build/target/product/embedded.mk)
-
-# A/B
+# A/B updater
 AB_OTA_UPDATER := true
 
 AB_OTA_PARTITIONS += \
@@ -21,66 +41,37 @@ AB_OTA_POSTINSTALL_CONFIG += \
     POSTINSTALL_OPTIONAL_system=true
 
 PRODUCT_PACKAGES += \
-    otapreopt_script
+    otapreopt_script \
+    update_engine \
+    update_engine_sideload \
+    update_verifier
 
-# Boot control
-PRODUCT_PACKAGES += \
-    android.hardware.boot@1.0-impl \
-    android.hardware.boot@1.0-service \
-    bootctrl.sdm660 \
-
+# The following modules are included in debuggable builds only.
 PRODUCT_PACKAGES_DEBUG += \
-    bootctl
+    bootctl \
+    update_engine_client
+
+# Boot control HAL
+PRODUCT_PACKAGES += \
+    bootctrl.sdm660
 
 PRODUCT_STATIC_BOOT_CONTROL_HAL := \
     bootctrl.sdm660 \
     libgptutils \
     libz
 
-# Update engine
-#PRODUCT_PACKAGES += \
-#    brillo_update_payload \
-#    update_engine \
-#    update_engine_sideload \
-#    update_verifier
-
-#PRODUCT_PACKAGES_DEBUG += \
-#    update_engine_client
+PRODUCT_PACKAGES += \
+    charger_res_images \
+    charger
+	
+	# Partitions (listed in the file) to be wiped under recovery.
+TARGET_RECOVERY_WIPE := \
+    device/bq/zangyapro/recovery/root/etc/recovery.wipe	
 
 
-# Verity
-PRODUCT_SYSTEM_VERITY_PARTITION := /dev/block/platform/soc/c0c4000.sdhci/by-name/system
-PRODUCT_VENDOR_VERITY_PARTITION := /dev/block/platform/soc/c0c4000.sdhci/by-name/vendor
-$(call inherit-product, build/target/product/verity.mk)
-
-
-
-
-# Time Zone data for recovery
-PRODUCT_COPY_FILES += \
-    system/timezone/output_data/iana/tzdata:recovery/root/system/usr/share/zoneinfo/tzdata \
-	$(LOCAL_PATH)/recovery/init.recovery.qcom.rc:root/init.recovery.qcom.rc \
-	$(LOCAL_PATH)/recovery/init.recovery.zangya.usb.rc:root/init.recovery.zangya.usb.rc \
-
-	# Device identifier. This must come after all inclusions
+## Device identifier. This must come after all inclusions
 PRODUCT_NAME := omni_zangyapro
 PRODUCT_DEVICE := zangyapro
 PRODUCT_BRAND := BQ
-PRODUCT_MODEL := X 2 Pro
+PRODUCT_MODEL := BQ Aquaris X2 Pro
 PRODUCT_MANUFACTURER := BQ
-
-# If needed to overide these props
-PRODUCT_BUILD_PROP_OVERRIDES += \
-    BUILD_FINGERPRINT="bq/zangyapro_bq/zangyapro_sprout:8.1.0/OPM1.171019.026/1050:user/release-keys" \
-    PRIVATE_BUILD_DESC="zangyapro_bq-user 8.1.0 OPM1.171019.026 1050 release-keys"
-
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    ro.treble.enabled=true \
-    sys.usb.controller=a800000.dwc3 \
-    persist.sys.usb.config=mtp \
-    persist.service.adb.enable=1 \
-    persist.service.debuggable=1
-
-TARGET_VENDOR_PRODUCT_NAME := zangyapro
-TARGET_VENDOR_DEVICE_NAME := zangyapro
-PRODUCT_BUILD_PROP_OVERRIDES += TARGET_DEVICE=zangyapro PRODUCT_NAME=zangyapro
