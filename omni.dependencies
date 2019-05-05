@@ -7,7 +7,7 @@
   },
  {
     "remote":"github",
-    "repository": "LineageOS/android_kernel_bq_sdm660",
+    "repository": "Micha-Btz/android_kernel_bq_sdm660",
     "target_path": "kernel/bq/sdm660",
     "revision":"lineage-15.1"
   }
