@@ -107,7 +107,7 @@ TW_SCREEN_BLANK_ON_BOOT := true
 TW_EXCLUDE_DEFAULT_USB_INIT := true
 TARGET_RECOVERY_DEVICE_MODULES += android.hardware.boot@1.0
 TW_RECOVERY_ADDITIONAL_RELINK_FILES := ${OUT}/system/lib64/android.hardware.boot@1.0.so
-TW_USE_TOOLBOX := true
+#TW_USE_TOOLBOX := true
 
 # Asian region languages
 TW_EXTRA_LANGUAGES := true
