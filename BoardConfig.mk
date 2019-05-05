@@ -23,7 +23,7 @@
 # *not* include it on all devices, so it is safe even with hardware-specific
 # components.
 
-PLATFORM_PATH := device/nokia/zangyapro
+PLATFORM_PATH := device/bq/zangyapro
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := sdm660
