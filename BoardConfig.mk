@@ -1,11 +1,11 @@
 #
-# Copyright (C) 2017 The Android Open Source Project
+# Copyright 2018 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,14 +14,33 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/bq/zangyapro
+# This contains the module build definitions for the hardware-specific
+# components for this device.
+#
+# As much as possible, those components should be built unconditionally,
+# with device-specific names to avoid collisions, to avoid device-specific
+# bitrot and build breakages. Building a component unconditionally does
+# *not* include it on all devices, so it is safe even with hardware-specific
+# components.
+
+PLATFORM_PATH := device/nokia/zangyapro
+
+# Bootloader
+TARGET_BOOTLOADER_BOARD_NAME := sdm660
+TARGET_NO_BOOTLOADER := true
+TARGET_USES_UEFI := true
+
+# Platform
+TARGET_BOARD_PLATFORM := sdm660
+TARGET_BOARD_PLATFORM_GPU := qcom-adreno512
+TARGET_USES_64_BIT_BINDER := true
 
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
-TARGET_CPU_VARIANT := generic
+TARGET_CPU_VARIANT := kryo
 
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv7-a-neon
@@ -29,70 +48,75 @@ TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := cortex-a53
 
-TARGET_BOARD_PLATFORM := sdm660
-TARGET_BOARD_PLATFORM_GPU := qcom-adreno506
-TARGET_BOARD_SUFFIX := _64
-
-# Bootloader
-TARGET_BOOTLOADER_BOARD_NAME := sdm660
-TARGET_NO_BOOTLOADER := true
-
-# Crypto
-TARGET_HW_DISK_ENCRYPTION := true
-
-# Encryption
-PLATFORM_SECURITY_PATCH := 2025-12-31
+# Enable CPUSets
+ENABLE_CPUSETS := true
+ENABLE_SCHEDBOOST := true
 
 # GPT Utils
 BOARD_PROVIDES_GPTUTILS := true
-
-# Kernel
-#BOARD_KERNEL_BASE := 0x80000000
-#BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci earlycon=msm_hsl_uart,0x78af000 androidboot.selinux=permissive
-BOARD_KERNEL_PAGESIZE := 2048
-#BOARD_KERNEL_TAGS_OFFSET := 0x00000100
-#BOARD_RAMDISK_OFFSET := 0x01000000
-#TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/Image.gz-dtb
 
 # Kernel
 BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom user_debug=31 ehci-hcd.park=3
 BOARD_KERNEL_CMDLINE += lpm_levels.sleep_disabled=1 service_locator.enable=1
 BOARD_KERNEL_CMDLINE += swiotlb=1 androidboot.configfs=true sched_enable_hmp=1 sched_enable_power_aware=1
 BOARD_KERNEL_CMDLINE += androidboot.usbcontroller=a800000.dwc3
-BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
-BOARD_KERNEL_BASE := 0x00000000
-BOARD_KERNEL_PAGESIZE := 4096
+BOARD_KERNEL_CMDLINE += skip_override androidboot.selinux=permissive
+BOARD_KERNEL_BASE        := 0x00000000
+BOARD_KERNEL_PAGESIZE    := 4096
 BOARD_KERNEL_TAGS_OFFSET := 0x02000000
-BOARD_RAMDISK_OFFSET := 0x02200000
+BOARD_RAMDISK_OFFSET     := 0x02200000
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 TARGET_KERNEL_SOURCE := kernel/bq/sdm660
-#TARGET_PREBUILT_KERNEL := device/bq/zangaypro/prebuilt/boot.img-zImage-1.7.2
 TARGET_KERNEL_CONFIG := lineageos_zangyapro_defconfig
 
 # Partitions
 BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3221225472
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 55087422464 # 25765059584 - 16384
-BOARD_PERSISTIMAGE_PARTITION_SIZE := 33554432
-#BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
-BOARD_FLASH_BLOCK_SIZE := 131072 # (BOARD_KERNEL_PAGESIZE * 64)
+BOARD_FLASH_BLOCK_SIZE := 0x40000 
 
 # Recovery
+BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_HAS_LARGE_FILESYSTEM := true
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_USE_F2FS := true
 
-# TWRP Configuration
-RECOVERY_SDCARD_ON_DATA := true
-RECOVERY_GRAPHICS_USE_LINELENGTH := true
-TARGET_RECOVERY_QCOM_RTC_FIX := true
-TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
-TW_EXCLUDE_SUPERSU := true
-TW_EXTRA_LANGUAGES := true
+# A/B device flags
+TARGET_NO_KERNEL := false
+#TARGET_NO_RECOVERY := true
+#BOARD_USES_RECOVERY_AS_BOOT := true
+BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
+AB_OTA_UPDATER := true
+
+# Crypto
 TW_INCLUDE_CRYPTO := true
-TW_INCLUDE_NTFS_3G := true
-#TW_INPUT_BLACKLIST := "hbtp_vm"
-TW_SCREEN_BLANK_ON_BOOT := true
+TARGET_HW_DISK_ENCRYPTION := true
+#TARGET_KEYMASTER_WAIT_FOR_QSEE := true
+PLATFORM_SECURITY_PATCH := 2025-12-31
+
+# TWRP
 TW_THEME := portrait_hdpi
+TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
+RECOVERY_SDCARD_ON_DATA := true
+TW_EXCLUDE_SUPERSU := true
+TARGET_RECOVERY_QCOM_RTC_FIX := true
+BOARD_SUPPRESS_SECURE_ERASE := true
+TW_INPUT_BLACKLIST := "hbtp_vm"
+TW_INCLUDE_NTFS_3G := true
+TW_DEFAULT_BRIGHTNESS := 80
+TW_SCREEN_BLANK_ON_BOOT := true
+TW_EXCLUDE_DEFAULT_USB_INIT := true
+TARGET_RECOVERY_DEVICE_MODULES += android.hardware.boot@1.0
+TW_RECOVERY_ADDITIONAL_RELINK_FILES := ${OUT}/system/lib64/android.hardware.boot@1.0.so
+TW_USE_TOOLBOX := true
+
+# Asian region languages
+TW_EXTRA_LANGUAGES := true
+
+
+# Debug flags
 TWRP_INCLUDE_LOGCAT := true
 TARGET_USES_LOGD := true
+
+# Workaround for error copying vendor files to recovery ramdisk
+BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
+TARGET_COPY_OUT_VENDOR := vendor
